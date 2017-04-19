@@ -6,4 +6,4 @@ The project should be seen as a living document.
 
 ## Projects
 
-Lagotto
+[Altmetrics with Lagotto](https://internetpolicyreview.github.io/oa-resources/lagotto_altmetrics)
