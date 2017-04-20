@@ -38,7 +38,7 @@ You will also want to consider a few other factors.
 
 *Note*: These instructions assume you're using a fresh installation of [Debian 8](http://debian.org).
 
-#### Adding the necessary sources
+#### Adding the ruby source
 
 Lagotto requires Ruby 2.2. There is a PPA for this, but using PPAs on Debian requires some additional software:
 ```sh
@@ -49,14 +49,6 @@ and then:
 sudo apt-add-repository ppa:brightbox/ruby-ng
 ```
 
-You also need to some more necessary sources:
-
-```
-deb https://oss-binaries.phusionpassenger.com/apt/passenger jessie main
-deb https://deb.nodesource.com/node_7.x jessie main
-deb-src https://deb.nodesource.com/node_7.x jessie main
-deb http://packages.erlang-solutions.com/debian jessie contrib
-```
 
 #### Required packages:
 
@@ -264,11 +256,25 @@ Try to run
 ```sh
 rake db:setup RAILS_ENV=production
 ```
+If that doesn't work, you have to do some stuff manually.
+First, set the root password to whatever you have in the .env file:
+```sh
+mysqladmin -u root password NEWPASSWORD
+```
 
-If that doesn't work, you have create the mysql user manually:
+Now create the mysql user manually:
 ```sh
 mysql -u root -p
 ```
+enter the `DB_SERVER_ROOT_PASSWORD` you just created.
+Now create a new user, using the `DB_PASSWORD` and `DB_USERNAME` variables in the .env file from above:
+```mysql
+CREATE USER 'DB_USERNAME'@'localhost' IDENTIFIED BY 'DB_PASSWORD';
+GRANT ALL PRIVILEGES ON * . * TO 'lagotto'@'localhost';
+FLUSH PRIVILEGES;
+quit
+```
+
 
 Now, do `rake db:setup RAILS_ENV=production` again.
 
