@@ -4,7 +4,9 @@ Background information on altmetrics can be found at [altmetrics.org](http://alt
 
 [Lagotto](http://lagotto.io) is an open-source application for tracking altmetrics. This guide is a resource for
 
-*Note*: Lagotto is not all you need to begin showing altmetrics. Depending on how your journal is set up, you may need
+*Note*: Lagotto is not all you need to begin showing altmetrics. Depending on how your journal is set up, you may need:
+- a way to track events that take place on your website, such as page views or pdf downloads. This may occur through e.g. Piwik, Google Analytics, or some other script.
+- a way to visualize the metrics. The [Almviz](https://github.com/jalperin/almviz) project by Juan Alperin, Martin Fenner, and others is an excellent way to do this, but you can also look into other [D3.JS](https://github.com/jalperin/almviz) visualizations. Think about what forms of information portrayal would be useful for your readers.
 
 ## Factors to consider:
 
@@ -20,12 +22,12 @@ In particular, 5.1 removes support for the following features:
 
 On the other hand, 5.1 is faster, provides more functionality for third-party authentication, more integration with third-party services.
 
-### Factors to consider:
+### Additional factors:
 You will also want to consider a few other factors.
 
 - Where will you run Lagotto?
   - On a server at your institution?
-  - Will you rent a cloud server?
+  - Will you rent space on a cloud server?
   - Can you run it on the same server hosting your website?
 - Who should have access to Lagotto?
   - Only journal staff, or also journal authors?
@@ -60,6 +62,67 @@ deb http://packages.erlang-solutions.com/debian jessie contrib
 
 ```sh
 sudo aptitude install ruby2.2 ruby2.2-dev make curl git libmysqlclient-dev avahi-daemon libnss-mdns -y
+```
+
+Now follow the official instructions to the letter a bit:
+
+#### Install databases
+
+```sh
+sudo apt-get install mysql-server redis-server -y
+```
+
+#### Install Memcached
+Memcached is used to cache requests (in particular API requests), and the default configuration can be used.
+
+```sh
+sudo apt-get install memcached -y
+```
+
+#### Install Postfix
+Postfix is used to send reports via email. The configuration is done in the `.env` file. More information can be found [here](http://guides.rubyonrails.org/action_mailer_basics.html).
+
+```sh
+sudo apt-get install postfix -y
+```
+
+#### Node.JS
+
+You want to install Nodejs from its own official [repository](https://nodejs.org/en/download/package-manager/#debian-and-ubuntu-based-linux-distributions), rather than the Debian one.
+Do this:
+```sh
+ curl -sL https://deb.nodesource.com/setup_7.x | sudo -E bash -
+sudo aptitude install -y nodejs
+```
+
+#### Phusion Passenger and Nginx
+
+Full instructions available on the [Phusion Passenger Website](https://www.phusionpassenger.com/library/install/nginx/install/oss/jessie/)
+
+```sh
+sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 561F9B9CAC40B2F7
+sudo apt-get install -y apt-transport-https ca-certificates
+
+# Add our APT repository
+sudo sh -c 'echo deb https://oss-binaries.phusionpassenger.com/apt/passenger jessie main > /etc/apt/sources.list.d/passenger.list'
+sudo apt-get update
+
+# Install Passenger + Nginx
+sudo apt-get install -y nginx-extras passenger
+```
+
+Then `nano /etc/nginx/nginx.conf` and remove the `#` behind `# include /etc/nginx/passenger.conf;` to uncomment it.
+
+Now `nano /etc/nginx/sites-enabled/lagotto.conf` and make sure it looks like this:
+```
+server {
+  listen 80 default_server;
+  server_name EXAMPLE.ORG;
+  root /var/www/lagotto/public;
+  access_log /var/log/nginx/lagotto.access.log;
+  passenger_enabled on;
+  passenger_app_env production;
+}
 ```
 
 
@@ -136,3 +199,130 @@ You can test whether CouchDB is running now, but you'll do it again at the end, 
 ```sh
 curl http://127.0.0.1:5984/
 ```
+
+#### Get Lagotto
+
+```sh
+mkdir -p /var/www
+cd /var/www
+```
+
+Now you have to think about which version of Lagotto to grab. In this case, grab the 4.3 branch.
+```
+git clone git://github.com/lagotto/lagotto.git -b 4-3-stable
+```
+Also, install bundler to handle all the Ruby stuff:
+```sh
+sudo gem install bundler
+```
+
+#### Users and permissions
+Up until now everything has been done as sudo. This is about to change.
+
+```sh
+useradd lagotto
+passwd lagotto
+```
+enter a password, do it again, and remember it.
+```sh
+mkdir /home/lagotto
+chown lagotto:users /home/lagotto
+chown -R lagotto:users /var/www/lagotto
+```
+now log out of root and log in as the lagotto user.
+
+#### Getting Lagotto ready:
+
+There's an issue with the gemfile, so fix that first:
+```sh
+cd /var/www/lagotto
+nano Gemfile.lock
+```
+and change `ruby-progressbar-1.7.4` to `ruby-progressbar-1.7.5`.
+
+Now you can do a
+```sh
+bundle install
+```
+
+#### Prepare the .env file, part 1
+
+Configuration settings for Lagotto are largely stored in the .env file. Get the template one by doing this:
+```sh
+cp .env.example .env
+```
+
+In particular look at the following settings:
+- Set `RAILS_ENV` to `production`
+- Think of a `DB_PASSWORD`.
+- `DB_USERNAME` as `vagrant` doesn't make much sense outside of a vagrant setup either, but doesn't strictly need to be changed, either.
+- change the `DB_SERVER_ROOT_PASSWORD` to something that isn't the default
+
+#### Databases:
+
+Try to run
+```sh
+rake db:setup RAILS_ENV=production
+```
+
+If that doesn't work, you have create the mysql user manually:
+```sh
+mysql -u root -p
+```
+
+Now, do `rake db:setup RAILS_ENV=production` again.
+
+Either way, you should be good now.
+check if CouchDB is doing everything right:
+```sh
+curl -X PUT http://localhost:5984/lagotto
+```
+
+#### .env file, part 2
+
+- Produce a new `SECRET_KEY_BASE` and a new `API_KEY` with `rake secret`
+
+if you are planning on using third party authentication:
+- choose an authentication method and set the `OMNIAUTH` variable accordingly
+  - see below for instructions on doing so with Github.
+
+#### Test Lagotto:
+
+Now, use root to restart nginx:
+```sh
+sudo service nginx restart
+```
+
+You can now check to see if Lagotto is running by navigating a web browser to the IP address of the machine it's installed on.
+
+Almost there!
+
+Start sidekiq:
+
+```sh
+RAILS_ENV=production rake sidekiq:start
+```
+
+#### Create Admin user:
+
+Unfortunately, the (very useful) creation of admin users through the web interface at /users/sign_up is broken. You can do it through the ruby console, though:
+
+```sh
+rails console
+```
+and then ```
+user=User.create!(:email=>'JANEDOE@EXAMPLE.COM',:password=>'PASSWORD',:name=>'JANEDOE',:role=>'admin')
+```
+
+#### Create / add works:
+
+Unfortunately, the very useful db:load:articles Rake Task doesn't always work very well - and it's missing entirely in Lagotto 5.1.
+
+Thankfully, you can use the API to add works. Try an example:
+
+```sh
+curl -X POST -H "Content-Type: application/json" -u JANEDOE@EXAMPLE.COM:PASSWORD -d '{"work":{"doi":"10.1371/journal.pone.0036790","year":2012,"month":5,"day":15,"title":"Test title"}}' http://HOSTNAME/api/v4/articles
+```
+Make sure to replace the values with an article in your journal, and HOSTNAME with the IP address.
+
+Now go to /works and you should see the articles your Lagotto is tracking.
