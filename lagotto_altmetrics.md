@@ -316,7 +316,7 @@ Unfortunately, the (very useful) creation of admin users through the web interfa
 ```sh
 rails console
 ```
-and then ```
+and then ```ruby
 user=User.create!(:email=>'JANEDOE@EXAMPLE.COM',:password=>'PASSWORD',:name=>'JANEDOE',:role=>'admin')
 ```
 
