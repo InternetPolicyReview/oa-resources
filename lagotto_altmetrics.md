@@ -311,12 +311,15 @@ RAILS_ENV=production rake sidekiq:start
 
 #### Create Admin user:
 
-Unfortunately, the (very useful) creation of admin users through the web interface at /users/sign_up is broken. You can do it through the ruby console, though:
+Unfortunately, the creation of admin users through the web interface at /users/sign_up is broken. You can do it through the ruby console, though:
 
 ```sh
 rails console
 ```
-and then ```ruby
+
+and then 
+
+```ruby
 user=User.create!(:email=>'JANEDOE@EXAMPLE.COM',:password=>'PASSWORD',:name=>'JANEDOE',:role=>'admin')
 ```
 
