@@ -325,9 +325,7 @@ user=User.create!(:email=>'JANEDOE@EXAMPLE.COM',:password=>'PASSWORD',:name=>'JA
 
 #### Create / add works:
 
-Unfortunately, the very useful db:load:articles Rake Task doesn't always work very well - and it's missing entirely in Lagotto 5.1.
-
-Thankfully, you can use the API to add works. Try an example:
+The best way to add works is using the API. This is how it works:
 
 ```sh
 curl -X POST -H "Content-Type: application/json" -u JANEDOE@EXAMPLE.COM:PASSWORD -d '{"work":{"doi":"10.1371/journal.pone.0036790","year":2012,"month":5,"day":15,"title":"Test title"}}' http://HOSTNAME/api/v4/articles
