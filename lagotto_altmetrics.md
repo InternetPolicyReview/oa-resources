@@ -337,9 +337,13 @@ Now go to /works and you should see the articles your Lagotto is tracking.
 
 ## FAQ
 
+Q = Question, P = Problem, A = Answer.
+
 - Q: Events (such as Tweets) only show up with numeric information.
 
 - Q: Events get lost after an update.
+
+- P: The most likely problem is that the Lagotta App is not communicating to the CouchDB Database Correctly. Lagotto uses two database programs, MySQL and CouchDB, to store the event information that it receives from the APIs. In the MySQL Database, it stores these in the api_responses table; in the CouchDB database, it does in the lagotto database. Each event receives its own document with appropriate values to match. 
 
 - A: Check to make sure that Lagotto is communicating with CouchDB sucessfully.
   - See if couchDB is running: 
