@@ -333,3 +333,27 @@ curl -X POST -H "Content-Type: application/json" -u JANEDOE@EXAMPLE.COM:PASSWORD
 Make sure to replace the values with an article in your journal, and HOSTNAME with the IP address.
 
 Now go to /works and you should see the articles your Lagotto is tracking.
+
+
+## FAQ
+
+Q: Events (such as Tweets) are only showing up with numeric information.
+
+Q: Events get lost after an update.
+
+A: Check to make sure that Lagotto is communicating with CouchDB sucessfully.
+- See if couchDB is running: 
+  ```sh 
+  curl http://localhost:5984/ 
+  ```
+  The above should respond with a message about the version of CouchDB (1.61)
+- Make sure that the Lagotto database is up:
+  ``` sh
+  curl http://localhost:5984/lagotto
+  ```
+- if this answers with an error message, do the following:
+  ```sh
+  curl -X PUT http://localhost:5984/lagotto
+  ```
+- now see if Lagotto saves data correctly.
+  
