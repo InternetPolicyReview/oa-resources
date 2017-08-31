@@ -16,4 +16,4 @@ Formatting Automation (coming soon)
 
 ## Contact & Participation
 
-If you have questions about the **Open Access Resources**, feel free to contact us on Github or drop us a line at patrick.riechert@hiig.de
+If you have questions about the **Open Access Resources**, feel free to contact us on Github or drop us a line at patrick.riechert//at//hiig.de
