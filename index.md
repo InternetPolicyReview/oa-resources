@@ -7,3 +7,5 @@ The project should be seen as a living document.
 ## Projects
 
 [Altmetrics with Lagotto](https://internetpolicyreview.github.io/oa-resources/lagotto_altmetrics)
+
+[Reference Parsing](https://internetpolicyreview.github.io/oa-resources/referenceParsing)
