@@ -1,3 +1,5 @@
+# Altmetrics with Lagotto
+
 ## Lagotto
 
 Background information on altmetrics can be found at [altmetrics.org](http://altmetrics.org). The idea behind altmetrics is to go beyond
@@ -323,7 +325,11 @@ and then
 user=User.create!(:email=>'JANEDOE@EXAMPLE.COM',:password=>'PASSWORD',:name=>'JANEDOE',:role=>'admin')
 ```
 
-#### Create / add works:
+## First steps with Lagotto
+
+### Create / add works:
+
+#### API
 
 The best way to add works is using the API. This is how it works:
 
@@ -332,7 +338,27 @@ curl -X POST -H "Content-Type: application/json" -u JANEDOE@EXAMPLE.COM:PASSWORD
 ```
 Make sure to replace the values with an article in your journal, and HOSTNAME with the IP address.
 
+#### Rails
+
+You can also use the Rails console, such as like this:
+```ruby
+work=Work.create!(:doi=>'10.14763/2014.2.286',:title=>'Bitcoin: a regulatory nightmare to a libertarian dream',:published_on=>'2014-05-23',:created_at=>'2017-05-02 18:30:33',:canonical_url=>'policyreview.info/articles/analysis/bitcoin-regulatory-nightmare-libertarian-dream',:year=>2014,:month=>5,:day=>23,:pid=>'10.14763/2014.2.286')
+```
 Now go to /works and you should see the articles your Lagotto is tracking.
+
+## Setup of Lagotto
+
+In order to setup Lagotto to begin actively tracking your data you need to configure the sources. Sources that use publicly available APIs (Wikipedia is a good example) do not need configuration; others require API keys and secrets. You can get these from the various platforms.
+
+You can use the rails console to serialize the data properly. First define the source you want to set up:
+```ruby
+twitter=Source.find(26)
+```
+and then use a command like the following:
+```ruby
+twitter.config=OpenStruct.new({:queue => "low", :rate_limiting => 1800, :cron_line => "* 6 * * *", :timeout => 30, :max_failed_queries => 200, :api_key => "YOUR API KEY", :api_secret => "YOUR API SECRET", :access_token => "" })
+```
+Note that Lagotto will retrieve the access token on its own.
 
 
 ## FAQ
