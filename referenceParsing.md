@@ -28,14 +28,6 @@ Upon completion, Anystyle will give you a few formats to export your references 
 
 Implementing the structured data in your journal depends on what kind of ouput formats you intend to use. It is useful to consider, for instance, if you want to:
 - deliver **machine-readable HTML**. This means that the website itself will contain the structured reference data, albeit most likely not in a format readable to humans. Options for storing machine-readable reference data include JSON-LD and RDF.
-
-
-- 
-
-In most cases, you want to 
-
-### JATS
-
-### Microdata
-
-- JSON-LD
+- provide **live links**. Note that Anystyle will not take care of this; you will need to send data to a doi-matching service.
+- render references into an arbitrary citation style.
+- provide another structured data format such as **JATS**. 
