@@ -2,13 +2,13 @@
 
 ## Lagotto
 
-Background information on altmetrics can be found at [altmetrics.org](http://altmetrics.org). The idea behind altmetrics is to go beyond
+Background information on altmetrics can be found at [altmetrics.org](http://altmetrics.org). Altmetrics aims go beyond traditional forms of measuring "academic impact" by drawing on data from online platforms.
 
-[Lagotto](http://lagotto.io) is an open-source application for tracking altmetrics. This guide is a resource for
+[Lagotto](http://lagotto.io) is an open-source application for tracking such article-level metrics. This guide is a resource for journals or other publishers who wish to use Lagotto. <!-- add reasons to use lagotto -->
 
 *Note*: Lagotto is not all you need to begin showing altmetrics. Depending on how your journal is set up, you may need:
-- a way to track events that take place on your website, such as page views or pdf downloads. This may occur through e.g. Piwik, Google Analytics, or some other script.
-- a way to visualize the metrics. The [Almviz](https://github.com/jalperin/almviz) project by Juan Alperin, Martin Fenner, and others is an excellent way to do this, but you can also look into other [D3.JS](https://github.com/jalperin/almviz) visualizations. Think about what forms of information portrayal would be useful for your readers.
+- a way to track events that take place on your website, such as page views or pdf downloads. This may occur through e.g. Piwik, Google Analytics, or some other tracking solution.
+- a way to visualize the metrics. The [Almviz](https://github.com/jalperin/almviz) project by Juan Alperin, Martin Fenner, and others is an excellent way to do this, but you can also look into other [D3.JS](https://d3js.org/) visualizations. Think about what forms of information portrayal would be useful for your readers.
 
 ## Factors to consider:
 
@@ -22,7 +22,7 @@ In particular, 5.1 removes support for the following features:
 - Importing works into Lagotto directly. Instead, you have to import works into Lagotto with e.g. the CrossRef API, which assumes that you are already using this.
 - Non-third-party authentication; this means that you need to go through a service like ORCID or Github.
 
-On the other hand, 5.1 is faster, provides more functionality for third-party authentication, more integration with third-party services.
+On the other hand, 5.1 is faster, provides more functionality for third-party authentication, and more integration with third-party services.
 
 ### Additional factors:
 You will also want to consider a few other factors.
