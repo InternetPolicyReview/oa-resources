@@ -1,0 +1,58 @@
+
+/* how it appears in production - ish */
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+  margin-bottom: 60px;
+  width: 100%;
+  font-weight: 400;
+  line-height: 1.31579;
+}
+
+table caption {
+  margin-bottom: 0.5em;
+  text-align: left;
+}
+
+table td,
+table th {
+  line-height: 1.42857;
+  border-bottom: 1px solid #bfc1c3;
+  padding: 10px 10px 10px 5px;
+  text-align: left;
+  vertical-align: top;
+  font-weight: 400;
+  /* the following needs to be repeated to be more specific than TinyMCE's own content styling */
+  font-size: 14px;
+  font-family: Arial,sans-serif;
+}
+
+thead th {
+  font-weight: bold;
+}
+
+table .numeric {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+
+/* making things look different to clarify various elements */
+
+table th {
+  position: relative;
+}
+table th::before {
+  content: '';
+  width: 3px;
+  height: 20px;
+  background-color: #28a197;
+  position: absolute;
+  left: 0;
+}
+
+span.visuallyhidden {
+  color: #999;
+  border: 1px dotted;
+}
