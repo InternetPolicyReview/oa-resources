@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>Internet Policy Review Table Editor</title>
+    <meta name="robots" content="noindex,nofollow" />
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/4.9.11/tinymce.min.js"></script> -->
+    <script src="js/tinymce/tinymce.min.js"></script>
+
+    <script>
+        tinymce.init({
+            selector: 'textarea',
+            content_css: ['base.css', 'ipr-tables.css'],
+            plugins: 'table autoresize code contextmenu nonbreaking paste visualchars',
+            menubar: false,
+            toolbar: 'newdocument | table tablerowprops tablecellprops tablemergecells | alignnone alignright bold styleselect | nonbreaking visualchars | tablecellbackgroundcolor | preparetable code',
+            table_toolbar: 'tablerowprops tablecellprops tablemergecells | tableinsertrowbefore tableinsertrowafter tabledeleterow | tableinsertcolbefore tableinsertcolafter tabledeletecol | tablecellbackgroundcolor', // below every table
+            contextmenu: 'tableprops cell row column', // appears on right click
+            table_background_color_map: [{
+                title: 'Blue',
+                value: '66b0c8'
+            }, {
+                title: 'Green',
+                value: 'a7b435'
+            }, {
+                title: 'Yellow',
+                value: 'f8bd00'
+            }, {
+                title: 'Salmon',
+                value: 'f27670'
+            }, {
+                title: 'Violet',
+                value: 'c3b2ce'
+            }],
+            autoresize_max_height: 600,
+            formats: {
+                alignright: {
+                    selector: 'td,th',
+                    classes: 'numeric'
+                },
+            },
+            style_formats: [{
+                title: 'Visually hidden text',
+                inline: 'span',
+                classes: 'visuallyhidden'
+            }, ],
+            // only allow table elements, plus a few more useful inline elements
+            // br = if added, TinyMCE adds br's all over the place (but they don't get through to the source code to be copied), causing issues with marking of empty header cells
+            // class: source-tableeditor = in case we need to do something in slimmer
+            valid_elements: 'table[class:source-tableeditor|id],caption,col,colgroup[span],thead,tbody,tfoot,tr[class],td[scope|colspan|rowspan|class|style],th[scope|colspan|rowspan|class|style],strong,span[class],abbr[title],br,p,ul,ol,li,em,a[href],fn',
+            forced_root_block: false,
+            table_grid: false,
+            table_advtab: false,
+            table_cell_advtab: false,
+            table_row_advtab: false,
+        });
+    </script>
+    <link rel="stylesheet" type="text/css" href="base.css" />
+</head>
+
+<body>
+    <noscript>Sorry, this editor only works with JavaScript.</noscript>
+
+    <textarea></textarea>
+</body>
+
+</html>
